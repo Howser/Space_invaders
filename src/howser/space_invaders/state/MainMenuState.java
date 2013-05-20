@@ -49,7 +49,6 @@ public class MainMenuState extends BaseState {
 
 	public void render(Frame frame) {
 		frame.clear(Colour.BLACK);
-		int w = frame.getWidth();
 		int h = frame.getHeight();
 		frame.renderString("Play", menuFont, 100, h / 4 + ySpacing * 0,
 				Colour.WHITE);

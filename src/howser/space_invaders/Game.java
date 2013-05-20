@@ -49,7 +49,7 @@ public class Game extends Canvas implements Runnable {
 		jFrame.setTitle(NAME);
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jFrame.setLayout(new BorderLayout());
-
+		
 		jFrame.add(this, BorderLayout.CENTER);
 		jFrame.pack();
 
