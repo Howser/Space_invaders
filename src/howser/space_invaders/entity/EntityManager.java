@@ -9,11 +9,14 @@ public class EntityManager {
 	
 	public EntityManager(){
 		entities = new ArrayList<BaseEntity>();
-		
 	}
 	
 	public void tick(){
 		for (BaseEntity e : entities){
+			if (e.isToBeRemoved()){
+				removeEntity(e);
+				continue;
+			}
 			e.tick();
 		}
 	}
@@ -22,5 +25,13 @@ public class EntityManager {
 		for (BaseEntity e : entities){
 			e.render(frame);
 		}
+	}
+	
+	public void addEntity(BaseEntity e){
+		entities.add(e);
+	}
+	
+	public void removeEntity(BaseEntity e){
+		entities.remove(e);
 	}
 }

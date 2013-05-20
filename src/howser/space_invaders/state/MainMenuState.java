@@ -37,6 +37,7 @@ public class MainMenuState extends BaseState {
 		if (input.keyPressedThisFrame(KeyEvent.VK_SPACE)){
 			switch(selectedItem){
 			case 0:
+				this.stateManager.changeState("game_state");
 				break;
 			case 1: 
 				break;

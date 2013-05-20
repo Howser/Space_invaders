@@ -2,6 +2,7 @@ package howser.space_invaders;
 
 import howser.space_invaders.gfx.Frame;
 import howser.space_invaders.state.ExitState;
+import howser.space_invaders.state.GameState;
 import howser.space_invaders.state.MainMenuState;
 import howser.space_invaders.state.StateManager;
 
@@ -110,6 +111,7 @@ public class Game extends Canvas implements Runnable {
 		stateManager = new StateManager();
 		stateManager.addState(new MainMenuState("main_menu", stateManager,
 				input));
+		stateManager.addState(new GameState("game_state", stateManager, input));
 		stateManager.addState(new ExitState("exit_state", stateManager, this));
 		stateManager.changeState("main_menu");
 
