@@ -30,7 +30,7 @@ public class GameState extends BaseState{
 	}
 
 	public void onEnter() {
-		entityManager.addEntity(new PlayerShip(sprites, 0,0, 16,16, 256/2, 150, 3, input));
+		entityManager.addEntity(new PlayerShip(sprites, 48,0, 16,16, 256/2, 150, 3, input));
 	}
 
 	public void onExit() {
