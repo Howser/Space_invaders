@@ -39,7 +39,7 @@ public class MainMenuState extends BaseState {
 			case 0:
 				this.stateManager.changeState("game_state");
 				break;
-			case 1: 
+			case 1:
 				break;
 			case 2: 
 				this.stateManager.changeState("exit_state");

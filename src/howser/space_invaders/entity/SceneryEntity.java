@@ -14,7 +14,7 @@ public class SceneryEntity extends BaseEntity {
 		this.width = sprite.getWidth();
 		this.height = sprite.getHeight();
 		this.renderDepth = renderDepth;
-		y = -16;
+		y = -16*scale;
 		this.speed = renderDepth*2;
 		this.scale = scale;
 	}

@@ -5,15 +5,15 @@ import howser.space_invaders.gfx.SpriteSheet;
 
 public abstract class Ship extends BaseEntity {
 
-	protected Ship(SpriteSheet sheet, int sheetX, int sheetY, int width, int height, int x, int y) {
-		this.width = width;
-		this.height = height;
+	protected Ship(Sprite sprite, float x, float y) {
+		this.width = sprite.getWidth();
+		this.height = sprite.getHeight();
 		this.x = x;
 		this.y = y;
-		this.sprite = Sprite.getSpriteFromSheet(sheet, sheetX, sheetY, width, height);
+		this.sprite = sprite;
 	}
 
-	public void Move(int dx, int dy) {
+	public void Move(float dx, float dy) {
 		x += dx;
 		y += dy;
 	}

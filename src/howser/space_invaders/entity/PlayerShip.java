@@ -12,16 +12,16 @@ import java.util.ArrayList;
 public class PlayerShip extends Ship {
 
 	private InputHandler input;
-	private int speed;
+	private float speed;
 	private Sprite shotSprite;
 	private ArrayList<ShotEntity> playerShots;
+	private ArrayList<EnemyShip> enemyShips;
 	private final int SHOT_DELAY = 10;
 	private int currentShotDelayTime = 0;
 
-	public PlayerShip(SpriteSheet sheet, int sheetX, int sheetY, int width,
-			int height, int x, int y, int speed, InputHandler input,
-			Sprite shotSprite) {
-		super(sheet, sheetX, sheetY, width, height, x, y);
+	public PlayerShip(Sprite sprite, float x, float y, float speed,
+			InputHandler input, Sprite shotSprite) {
+		super(sprite, x, y);
 		this.input = input;
 		this.speed = speed;
 		input.addKeyListen(KeyEvent.VK_LEFT);
@@ -31,8 +31,10 @@ public class PlayerShip extends Ship {
 		this.shotSprite = shotSprite;
 	}
 
-	public void setLists(ArrayList<ShotEntity> playerShots) {
+	public void setLists(ArrayList<ShotEntity> playerShots,
+			ArrayList<EnemyShip> enemyShips) {
 		this.playerShots = playerShots;
+		this.enemyShips = enemyShips;
 	}
 
 	public void tick() {
@@ -57,6 +59,5 @@ public class PlayerShip extends Ship {
 
 	public void shoot() {
 		playerShots.add(new ShotEntity(x + 6, y, shotSprite, 0, -5f));
-		System.out.println("SHOOTING");
 	}
 }
