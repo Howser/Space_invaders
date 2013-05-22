@@ -36,7 +36,7 @@ public class PlayerShip extends Ship{
 	}
 
 	public void render(Frame frame) {
-		frame.renderToFrame(sprite.getPixels(), x, y, width, height);
+		frame.renderToFrame(sprite.getPixels(), (int)x, (int)y, width, height);
 	}
 	
 	public void shoot(){

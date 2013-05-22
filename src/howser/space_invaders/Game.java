@@ -111,7 +111,7 @@ public class Game extends Canvas implements Runnable {
 		stateManager = new StateManager();
 		stateManager.addState(new MainMenuState("main_menu", stateManager,
 				input));
-		stateManager.addState(new GameState("game_state", stateManager, input));
+		stateManager.addState(new GameState("game_state", stateManager, input, WIDTH, HEIGHT));
 		stateManager.addState(new ExitState("exit_state", stateManager, this));
 		stateManager.changeState("main_menu");
 

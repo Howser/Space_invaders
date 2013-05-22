@@ -15,7 +15,7 @@ public class Sprite {
 		this.height = height;
 	}
 
-	public Sprite(int[] pixelData, int width, int height, int colour) {
+	public Sprite(int[] pixelData, int width, int height, int colour, int scale) {
 		this.pixels = pixelData;
 		this.width = width;
 		this.height = height;

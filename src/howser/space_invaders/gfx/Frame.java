@@ -5,7 +5,8 @@ public class Frame {
 	public int[] pixels;
 	private int width;
 	private int height;
-	public final int TRANSPARENT_COLOUR = 0xffff00ff;
+	public final int TRANSPARENT_COLOUR1 = 0xffff00ff;
+	public final int TRANSPARENT_COLOUR2 = 0xff57007F;
 
 	public Frame(int width, int height) {
 		this.width = width;
@@ -23,7 +24,7 @@ public class Frame {
 		int dataIndex = 0;
 		for (int y = 0; y < h; y++) {
 			for (int x = 0; x < w; x++) {
-				if (data[dataIndex] != TRANSPARENT_COLOUR) {
+				if (data[dataIndex] != TRANSPARENT_COLOUR1 && data[dataIndex] != TRANSPARENT_COLOUR2) {
 					if (0 >= xa + x || xa + x >= width || 0 >= ya + y
 							|| ya + y >= height) {
 						dataIndex++;
@@ -34,6 +35,23 @@ public class Frame {
 				dataIndex++;
 			}
 		}
+	}
+	
+	public void renderToFrame(Sprite sprite, int x, int y, float scale){
+		int[] baseData = sprite.getPixels();
+		int nW = (int)(sprite.getWidth()*scale);
+		int nH = (int)(sprite.getHeight()*scale);
+		int oW = sprite.getWidth();
+		int oH = sprite.getHeight();
+		
+		int[] newData = new int[nW* nH];
+		
+		for (int ya = 0; ya < nH; ya++){
+			for (int xa = 0; xa < nW; xa++){
+				newData[xa + ya * nW] = baseData[(xa*oW/nW) + (ya*oH/nH)*oW];
+			}
+		}
+		renderToFrame(newData, x, y, nW, nH);
 	}
 	
 	public void renderString(String string, Font font, int x, int y, int colour){
