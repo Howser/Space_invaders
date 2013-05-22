@@ -10,6 +10,8 @@ public class ShotEntity extends BaseEntity{
 	
 	public ShotEntity(float x, float y, Sprite sprite, float xSpeed, float ySpeed){
 		super(x, y, sprite.getWidth(), sprite.getHeight(), sprite);
+		this.xSpeed = xSpeed;
+		this.ySpeed = ySpeed;
 	}
 	
 	public void tick() {
