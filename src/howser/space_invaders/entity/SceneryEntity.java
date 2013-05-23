@@ -26,4 +26,11 @@ public class SceneryEntity extends BaseEntity {
 	public void render(Frame frame) {
 		frame.renderToFrame(sprite, (int)x, (int)y, scale);
 	}
+	
+	public void setSpeed(float speed){
+		this.speed = speed;
+	}
+	public float getSpeed(){
+		return speed;
+	}
 }
