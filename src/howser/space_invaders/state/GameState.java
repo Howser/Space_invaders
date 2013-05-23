@@ -58,6 +58,13 @@ public class GameState extends BaseState {
 			
 			for (int i = 0; i < enemyShips.size(); i++) {
 					enemyShips.get(i).tick();
+					for (int j = 0; j < playerShots.size(); j++){
+						if (enemyShips.get(i).collides((int)playerShots.get(j).x, (int)playerShots.get(j).y, playerShots.get(j).width, playerShots.get(j).height)){
+							enemyShips.get(i).die();
+							playerShots.remove(j);
+							j--;
+						}
+					}
 				if (enemyShips.get(i).isToBeRemoved()) {
 					enemyShips.remove(i);
 					i--;
@@ -65,6 +72,11 @@ public class GameState extends BaseState {
 			}
 
 			player.tick();
+			if (player.x < 0){
+				player.x = 0;
+			} else if (player.x + player.width > width){
+				player.x = width-player.width;
+			}
 
 			for (int i = 0; i < scenery.size(); i++) {
 				scenery.get(i).tick();

@@ -39,4 +39,8 @@ public class EnemyShip extends Ship{
 	public void render(Frame frame) {
 		frame.renderToFrame(sprite, (int)x, (int)y, 1);
 	}
+	
+	public void die(){
+		setForRemoval();
+	}
 }

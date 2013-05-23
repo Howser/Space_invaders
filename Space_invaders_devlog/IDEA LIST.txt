@@ -7,3 +7,11 @@
 		-Weapon object has a shoot method
 		-Shoot method returns an array of shots
 		-The returned shots can then have different directions and sprites : D
+		
+*Planets are collidable and you can blow them up creating debris which in turn is collidable
+	-Both players and enemies can get hurt by planets + debris
+	
+*Unlockable ships
+	-Slow beefy one
+	-Fast as fuck one
+	-Iron man
