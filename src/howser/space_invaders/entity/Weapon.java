@@ -47,7 +47,7 @@ public class Weapon implements Serializable {
 				double angle = (projectileSpread/shots.length*(i+0.5)) + dir*180 - (projectileSpread/2);
 				float xSpeed = projectileSpeed * (float)Math.sin(Math.toRadians(angle));
 				float ySpeed = projectileSpeed * (float)Math.cos(Math.toRadians(angle));
-				shots[i] = new ShotEntity(x, y, shotSprite, xSpeed, ySpeed);
+				shots[i] = new ShotEntity(x, y, shotSprite, xSpeed, ySpeed, damage);
 			}
 			canFire = false;
 			cooldownTimer = 0;

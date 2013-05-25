@@ -2,6 +2,7 @@ package howser.space_invaders.state;
 
 import howser.space_invaders.InputHandler;
 import howser.space_invaders.entity.EnemyShip;
+import howser.space_invaders.entity.Planet;
 import howser.space_invaders.entity.PlayerShip;
 import howser.space_invaders.entity.SceneryEntity;
 import howser.space_invaders.entity.ShotEntity;
@@ -22,6 +23,7 @@ public class GameState extends BaseState {
 	private ArrayList<SceneryEntity> scenery;
 	private ArrayList<ShotEntity> playerShots;
 	private ArrayList<EnemyShip> enemyShips;
+	private ArrayList<Planet> planets;
 	private PlayerShip player;
 	private SpriteSheet sprites;
 	private InputHandler input;
@@ -33,6 +35,8 @@ public class GameState extends BaseState {
 	private final int MAX_STARS = 2;
 	private final int PLANET_ROW = 3;
 	private final int MAX_PLANETS = 5;
+	private final int PLANET_SHARD_ROW = 5;
+	private final int MAX_PLANET_SHARDS = 9;
 	private int width, height;
 	private SpriteAnimation explosion;
 	private boolean gameOver = false;
@@ -115,12 +119,16 @@ public class GameState extends BaseState {
 			// Generate the game stuff
 			generateScenery();
 			sortRenderDepth();
-			generateEnemyShips();
+			generateDangers();
+			updatePlanets();
 		}
-		if (input.keyPressedThisFrame(KeyEvent.VK_ESCAPE)) {
-			paused = !paused;
+		if (!gameOver) {
+			if (input.keyPressedThisFrame(KeyEvent.VK_ESCAPE)) {
+				paused = !paused;
+			}
 		}
-		if (gameOver && input.keyPressedThisFrame(KeyEvent.VK_SPACE)) {
+
+		if (gameOver && input.keyPressedThisFrame(KeyEvent.VK_ESCAPE)) {
 			stateManager.changeState("main_menu");
 		}
 	}
@@ -144,6 +152,10 @@ public class GameState extends BaseState {
 			s.render(frame);
 		}
 
+		for (Planet p : planets) {
+			p.render(frame);
+		}
+
 		// Score
 		frame.renderString("Score: " + score, font, 10, 10, Colour.GREEN);
 		frame.renderString("Lives: " + player.lives, font, 10, 20, Colour.RED);
@@ -156,7 +168,7 @@ public class GameState extends BaseState {
 		if (gameOver) {
 			frame.renderString("Game Over!", font,
 					frame.getWidth() / 2 - 5 * 8, 100, Colour.WHITE);
-			frame.renderString("Press space to continue", font,
+			frame.renderString("Press escape to continue", font,
 					frame.getWidth() / 2 - 11 * 8, 120, Colour.WHITE);
 		}
 	}
@@ -168,17 +180,19 @@ public class GameState extends BaseState {
 				Sprite.getSpriteFromSheet(sprites, 0, 16 * 4, 16, 16),
 				Sprite.getSpriteFromSheet(sprites, 16, 16 * 4, 16, 16),
 				Sprite.getSpriteFromSheet(sprites, 32, 16 * 4, 16, 16),
-				Sprite.getSpriteFromSheet(sprites, 48, 16 * 4, 16, 16), };
+				Sprite.getSpriteFromSheet(sprites, 48, 16 * 4, 16, 16),
+				Sprite.getSpriteFromSheet(sprites, 64, 16 * 4, 16, 16), };
 
 		explosion = new SpriteAnimation(explosionFrames, 5);
 
 		enemyShips = new ArrayList<EnemyShip>();
 		scenery = new ArrayList<SceneryEntity>();
 		playerShots = new ArrayList<ShotEntity>();
+		planets = new ArrayList<Planet>();
 		player = new PlayerShip(
 				Sprite.getSpriteFromSheet(sprites, 0, 0, 16, 16), width / 2,
-				height - 30, 2, input, explosion, new Weapon(5, 2, 40, 10, 4, Sprite.getSpriteFromSheet(sprites, 0,
-						16, 3, 3), 1));
+				height - 30, 2, input, explosion, new Weapon(5, 2, 40, 10, 4,
+						Sprite.getSpriteFromSheet(sprites, 0, 16, 3, 3), 1));
 		player.setLists(playerShots, enemyShips);
 		input.addKeyListen(KeyEvent.VK_ESCAPE);
 	}
@@ -202,28 +216,26 @@ public class GameState extends BaseState {
 		int itemCount = rand.nextInt(7);
 		// generate the items
 		for (int i = 0; i < itemCount; i++) {
-			// Create a star (90%)
-			if (rand.nextInt(100) < 99) {
-				int star = rand.nextInt(MAX_STARS);
-				scenery.add(new SceneryEntity(Sprite.getSpriteFromSheet(
-						sprites, star * 16, STAR_ROW * 16, 16, 16), rand
-						.nextInt(256), (rand.nextFloat() + 0.1f) * 0.5f, 1));
-			} else {
-				int planet = rand.nextInt(MAX_PLANETS);
-				float distance = rand.nextFloat() + 0.2f * 2;
-				scenery.add(new SceneryEntity(Sprite.getSpriteFromSheet(
-						sprites, planet * 16, PLANET_ROW * 16, 16, 16), rand
-						.nextInt(256), distance, distance + 1.0f));
-			}
+			int star = rand.nextInt(MAX_STARS);
+			scenery.add(new SceneryEntity(Sprite.getSpriteFromSheet(sprites,
+					star * 16, STAR_ROW * 16, 16, 16), rand.nextInt(256), (rand
+					.nextFloat() + 0.1f) * 0.5f, 1));
 		}
 	}
 
-	public void generateEnemyShips() {
+	public void generateDangers() {
 		if (rand.nextInt(100) < 1) {
 			EnemyShip ship = new EnemyShip(Sprite.getSpriteFromSheet(sprites,
 					16, 0, 16, 16), rand.nextInt(width), -16, 0, 2,
 					Colour.PURPLE, false, 50, width, height, explosion);
 			enemyShips.add(ship);
+		}
+		if (rand.nextInt(200) < 1) {
+			float speedScale = (rand.nextFloat() + 0.5f) * 2;
+			planets.add(new Planet(Sprite.getSpriteFromSheet(sprites,
+					rand.nextInt(MAX_PLANETS) * 16, PLANET_ROW * 16, 16, 16),
+					rand.nextInt((int) (width - (16 * speedScale))), -40,
+					explosion, speedScale, speedScale, false));
 		}
 	}
 
@@ -238,6 +250,41 @@ public class GameState extends BaseState {
 				holePos--;
 			}
 			scenery.set(holePos, se);
+		}
+	}
+
+	public void updatePlanets() {
+		for (int i = 0; i < planets.size(); i++) {
+			
+			if (planets.get(i).collides(player.x, player.y, player.width,
+					player.height) && !planets.get(i).exploding) {
+				player.hit();
+			}
+			for (ShotEntity s : playerShots) {
+				if (planets.get(i).collides(s.x, s.y, s.width, s.height)
+						&& !planets.get(i).exploding) {
+					planets.get(i).hit(s.damage);
+					s.setForRemoval();
+				}
+			}
+			if (planets.get(i).exploding && !planets.get(i).planetShard
+					&& !planets.get(i).childrenCreated) {
+				score += planets.get(i).score;
+				planets.get(i).childrenCreated = true;
+				for (int j = 0; j < 4; j++) {
+					planets.add(new Planet(Sprite.getSpriteFromSheet(sprites,
+							rand.nextInt(MAX_PLANET_SHARDS) * 16,
+							PLANET_SHARD_ROW * 16, 16, 16), planets.get(i).x,
+							planets.get(i).y, explosion, planets.get(i)
+									.getScale() / 2, rand.nextFloat() * 2f,
+							true));
+				}
+			}
+			planets.get(i).tick();
+			if (planets.get(i).isToBeRemoved() || planets.get(i).y > height) {
+				planets.remove(i);
+				i--;
+			}
 		}
 	}
 }

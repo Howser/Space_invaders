@@ -51,7 +51,7 @@ public class SpriteAnimation {
 		}
 	}
 
-	public void render(Frame frame, int x, int y, int scale) {
+	public void render(Frame frame, int x, int y, float scale) {
 		frame.renderToFrame(frames[currentFrame], x, y, scale);
 	}
 	
