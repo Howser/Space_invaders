@@ -24,7 +24,6 @@ public class MainMenuState extends BaseState {
 	public void tick() {
 		if (input.keyPressedThisFrame(KeyEvent.VK_DOWN)){
 			selectedItem++;
-			System.out.println("adfaf");
 		}
 		if (input.keyPressedThisFrame(KeyEvent.VK_UP)){
 			selectedItem--;
@@ -75,6 +74,6 @@ public class MainMenuState extends BaseState {
 	}
 
 	public void reset() {
-
+		
 	}
 }

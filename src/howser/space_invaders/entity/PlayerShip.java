@@ -13,19 +13,17 @@ public class PlayerShip extends Ship {
 
 	private InputHandler input;
 	private float speed;
-	private Sprite shotSprite;
 	private ArrayList<ShotEntity> playerShots;
 	private ArrayList<EnemyShip> enemyShips;
-	private final int SHOT_DELAY = 10;
-	private int currentShotDelayTime = 0;
 	public int lives = 3;
 	public boolean isHit = false;
 	private final int HIT_TIMER_LIMIT = 60;
 	private int hitTimer = 0;
 	private boolean dead = false;
+	private Weapon weapon;
 
 	public PlayerShip(Sprite sprite, float x, float y, float speed,
-			InputHandler input, Sprite shotSprite, SpriteAnimation explosion) {
+			InputHandler input, SpriteAnimation explosion, Weapon weapon) {
 		super(sprite, x, y, explosion);
 		this.input = input;
 		this.speed = speed;
@@ -33,7 +31,7 @@ public class PlayerShip extends Ship {
 		input.addKeyListen(KeyEvent.VK_RIGHT);
 		input.addKeyListen(KeyEvent.VK_SPACE);
 		sprite.setTint(Colour.RED);
-		this.shotSprite = shotSprite;
+		this.weapon = weapon;
 	}
 
 	public void setLists(ArrayList<ShotEntity> playerShots,
@@ -44,7 +42,6 @@ public class PlayerShip extends Ship {
 
 	public void tick() {
 		if (!dead) {
-			currentShotDelayTime++;
 			if (!isHit) {
 				if (input.isKeyPressed(KeyEvent.VK_LEFT)) {
 					Move(-speed, 0);
@@ -53,10 +50,7 @@ public class PlayerShip extends Ship {
 					Move(speed, 0);
 				}
 				if (input.isKeyPressed(KeyEvent.VK_SPACE)) {
-					if (currentShotDelayTime > SHOT_DELAY) {
-						shoot();
-						currentShotDelayTime = 0;
-					}
+					shoot();
 				}
 			} else {
 				hitTimer++;
@@ -64,6 +58,7 @@ public class PlayerShip extends Ship {
 					isHit = false;
 				}
 			}
+			weapon.tick();
 		} else {
 			explosion.tick();
 			this.Move(0, 1);
@@ -76,13 +71,18 @@ public class PlayerShip extends Ship {
 				frame.renderToFrame(sprite.getPixels(), (int) x, (int) y,
 						width, height);
 			}
-		} else if (explosion.isPlaying()){
-			explosion.render(frame, (int)x, (int)y, 1);
+		} else if (explosion.isPlaying()) {
+			explosion.render(frame, (int) x, (int) y, 1);
 		}
 	}
 
 	public void shoot() {
-		playerShots.add(new ShotEntity(x + 6, y, shotSprite, 0, -5f));
+		ShotEntity[] shots = weapon.fire(x + 7, y);
+		if (shots != null) {
+			for (ShotEntity e : shots) {
+				playerShots.add(e);
+			}
+		}
 	}
 
 	public void hit() {

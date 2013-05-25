@@ -5,6 +5,7 @@ import howser.space_invaders.entity.EnemyShip;
 import howser.space_invaders.entity.PlayerShip;
 import howser.space_invaders.entity.SceneryEntity;
 import howser.space_invaders.entity.ShotEntity;
+import howser.space_invaders.entity.Weapon;
 import howser.space_invaders.gfx.Colour;
 import howser.space_invaders.gfx.Font;
 import howser.space_invaders.gfx.Frame;
@@ -176,8 +177,8 @@ public class GameState extends BaseState {
 		playerShots = new ArrayList<ShotEntity>();
 		player = new PlayerShip(
 				Sprite.getSpriteFromSheet(sprites, 0, 0, 16, 16), width / 2,
-				height - 30, 2, input, Sprite.getSpriteFromSheet(sprites, 0,
-						16, 3, 3), explosion);
+				height - 30, 2, input, explosion, new Weapon(5, 2, 40, 10, 4, Sprite.getSpriteFromSheet(sprites, 0,
+						16, 3, 3), 1));
 		player.setLists(playerShots, enemyShips);
 		input.addKeyListen(KeyEvent.VK_ESCAPE);
 	}

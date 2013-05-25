@@ -1,0 +1,10 @@
+TODO: 
+
+Implement highscore system (save highscore to list and update as needed)
+
+Make planets explode
+
+Create weapons class
+
+Create a ship/content loading pipeline that loads ships and weapons from a file, to make the game data driven. 
+

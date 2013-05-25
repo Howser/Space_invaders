@@ -22,7 +22,7 @@ public class Game extends Canvas implements Runnable {
 
 	public static final int WIDTH = 256;
 	public static final int HEIGHT = WIDTH / 12 * 9;
-	public static final int SCALE = 4;
+	public static final int SCALE = 3;
 	public static final String NAME = "Space invaders";
 	private boolean running = false;
 
