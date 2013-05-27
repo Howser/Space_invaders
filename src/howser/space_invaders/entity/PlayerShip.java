@@ -14,10 +14,9 @@ public class PlayerShip extends Ship {
 	private InputHandler input;
 	private float speed;
 	private ArrayList<ShotEntity> playerShots;
-	private ArrayList<EnemyShip> enemyShips;
 	public int lives = 3;
 	public boolean isHit = false;
-	private final int HIT_TIMER_LIMIT = 60;
+	private final int HIT_TIMER_LIMIT = 120;
 	private int hitTimer = 0;
 	private boolean dead = false;
 	private Weapon weapon;
@@ -34,10 +33,8 @@ public class PlayerShip extends Ship {
 		this.weapon = weapon;
 	}
 
-	public void setLists(ArrayList<ShotEntity> playerShots,
-			ArrayList<EnemyShip> enemyShips) {
+	public void setLists(ArrayList<ShotEntity> playerShots) {
 		this.playerShots = playerShots;
-		this.enemyShips = enemyShips;
 	}
 
 	public void tick() {

@@ -87,6 +87,7 @@ public class GameState extends BaseState {
 						player.width, player.height)
 						&& !player.isHit && !enemyShips.get(i).dead) {
 					player.hit();
+					explodeAll();
 					enemyShips.get(i).die();
 				}
 
@@ -191,9 +192,9 @@ public class GameState extends BaseState {
 		planets = new ArrayList<Planet>();
 		player = new PlayerShip(
 				Sprite.getSpriteFromSheet(sprites, 0, 0, 16, 16), width / 2,
-				height - 30, 2, input, explosion, new Weapon(5, 2, 40, 10, 4,
+				height - 30, 2, input, new SpriteAnimation(explosion), new Weapon(5, 2, 40, 10, 4,
 						Sprite.getSpriteFromSheet(sprites, 0, 16, 3, 3), 1));
-		player.setLists(playerShots, enemyShips);
+		player.setLists(playerShots);
 		input.addKeyListen(KeyEvent.VK_ESCAPE);
 	}
 
@@ -227,7 +228,7 @@ public class GameState extends BaseState {
 		if (rand.nextInt(100) < 1) {
 			EnemyShip ship = new EnemyShip(Sprite.getSpriteFromSheet(sprites,
 					16, 0, 16, 16), rand.nextInt(width), -16, 0, 2,
-					Colour.PURPLE, false, 50, width, height, explosion);
+					Colour.PURPLE, false, 50, width, height, new SpriteAnimation(explosion));
 			enemyShips.add(ship);
 		}
 		if (rand.nextInt(200) < 1) {
@@ -235,7 +236,7 @@ public class GameState extends BaseState {
 			planets.add(new Planet(Sprite.getSpriteFromSheet(sprites,
 					rand.nextInt(MAX_PLANETS) * 16, PLANET_ROW * 16, 16, 16),
 					rand.nextInt((int) (width - (16 * speedScale))), -40,
-					explosion, speedScale, speedScale, false));
+					new SpriteAnimation(explosion), speedScale, speedScale / 2, false));
 		}
 	}
 
@@ -255,11 +256,14 @@ public class GameState extends BaseState {
 
 	public void updatePlanets() {
 		for (int i = 0; i < planets.size(); i++) {
-			
+
 			if (planets.get(i).collides(player.x, player.y, player.width,
-					player.height) && !planets.get(i).exploding) {
+					player.height)
+					&& !planets.get(i).exploding) {
 				player.hit();
+				explodeAll();
 			}
+
 			for (ShotEntity s : playerShots) {
 				if (planets.get(i).collides(s.x, s.y, s.width, s.height)
 						&& !planets.get(i).exploding) {
@@ -267,23 +271,41 @@ public class GameState extends BaseState {
 					s.setForRemoval();
 				}
 			}
-			if (planets.get(i).exploding && !planets.get(i).planetShard
-					&& !planets.get(i).childrenCreated) {
+
+			if (planets.get(i).exploding && !planets.get(i).childrenCreated) {
 				score += planets.get(i).score;
 				planets.get(i).childrenCreated = true;
-				for (int j = 0; j < 4; j++) {
-					planets.add(new Planet(Sprite.getSpriteFromSheet(sprites,
-							rand.nextInt(MAX_PLANET_SHARDS) * 16,
-							PLANET_SHARD_ROW * 16, 16, 16), planets.get(i).x,
-							planets.get(i).y, explosion, planets.get(i)
-									.getScale() / 2, rand.nextFloat() * 2f,
-							true));
+				if (!planets.get(i).planetShard) {
+					for (int j = 0; j < 4; j++) {
+						planets.add(new Planet(Sprite.getSpriteFromSheet(
+								sprites, rand.nextInt(MAX_PLANET_SHARDS) * 16,
+								PLANET_SHARD_ROW * 16, 16, 16),
+								planets.get(i).x, planets.get(i).y, new SpriteAnimation(explosion),
+								planets.get(i).getScale() / 2,
+								rand.nextFloat() * 2f, true));
+					}
 				}
 			}
+
 			planets.get(i).tick();
-			if (planets.get(i).isToBeRemoved() || planets.get(i).y > height) {
+			if (planets.get(i).isToBeRemoved() || planets.get(i).y > height
+					|| planets.get(i).x > width || planets.get(i).x < 0) {
 				planets.remove(i);
 				i--;
+			}
+		}
+	}
+
+	public void explodeAll() {
+		for (int i = 0; i < enemyShips.size(); i++) {
+			if (!enemyShips.get(i).dead) {
+				enemyShips.get(i).die();
+			}
+		}
+		for (int i = 0; i < planets.size(); i++) {
+			if (!planets.get(i).exploding) {
+				planets.get(i).hit(1000);
+				planets.get(i).childrenCreated = true;
 			}
 		}
 	}

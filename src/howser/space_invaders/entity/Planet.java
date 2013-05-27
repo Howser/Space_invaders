@@ -1,5 +1,6 @@
 package howser.space_invaders.entity;
 
+import howser.space_invaders.gfx.Colour;
 import howser.space_invaders.gfx.Frame;
 import howser.space_invaders.gfx.Sprite;
 import howser.space_invaders.gfx.SpriteAnimation;
@@ -52,9 +53,6 @@ public class Planet extends Ship {
 					Move(speed / 2, speed);
 				}
 			}
-			if (hp <= 0 && !explosion.isPlaying()) {
-				explode();
-			}
 		}
 	}
 
@@ -68,6 +66,9 @@ public class Planet extends Ship {
 
 	public void hit(int damage) {
 		hp -= damage;
+		if (hp <= 0 && !exploding){
+			explode();
+		}
 	}
 
 	private void explode() {

@@ -17,11 +17,21 @@ public class SpriteAnimation {
 		playing = false;
 		loop = false;
 	}
+	
+	public SpriteAnimation(SpriteAnimation clone){
+		this.frames = clone.frames;
+		this.frameDelay = clone.frameDelay;
+		frameDelayTimer = 0;
+		currentFrame = 0;
+		playing = false;
+		loop = false;
+	}
 
 	public void play() {
 		currentFrame = 0;
 		playing = true;
 		loop = false;
+		frameDelayTimer = 0;
 	}
 
 	public void loop(){
