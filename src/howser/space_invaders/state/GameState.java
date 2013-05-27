@@ -13,6 +13,7 @@ import howser.space_invaders.gfx.Frame;
 import howser.space_invaders.gfx.Sprite;
 import howser.space_invaders.gfx.SpriteAnimation;
 import howser.space_invaders.gfx.SpriteSheet;
+import howser.space_invaders.state.messages.StateMessage;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -130,7 +131,7 @@ public class GameState extends BaseState {
 		}
 
 		if (gameOver && input.keyPressedThisFrame(KeyEvent.VK_ESCAPE)) {
-			stateManager.changeState("main_menu");
+			stateManager.changeState("highscore_state");
 		}
 	}
 
@@ -201,6 +202,12 @@ public class GameState extends BaseState {
 	public void onExit() {
 		input.clearKeyListens();
 		enemyShips.clear();
+		
+		ArrayList<Object> data = new ArrayList<Object>();
+		data.add(score);
+		
+		StateMessage msg = new StateMessage(this.name, "highscore_state", data);
+		sendMessage(msg);
 	}
 
 	public void reset() {
@@ -308,5 +315,9 @@ public class GameState extends BaseState {
 				planets.get(i).childrenCreated = true;
 			}
 		}
+	}
+
+	public void receiveMessage(StateMessage message) {
+		
 	}
 }

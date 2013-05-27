@@ -24,7 +24,8 @@ public class Frame {
 		int dataIndex = 0;
 		for (int y = 0; y < h; y++) {
 			for (int x = 0; x < w; x++) {
-				if (data[dataIndex] != TRANSPARENT_COLOUR1 && data[dataIndex] != TRANSPARENT_COLOUR2) {
+				if (data[dataIndex] != TRANSPARENT_COLOUR1
+						&& data[dataIndex] != TRANSPARENT_COLOUR2) {
 					if (0 >= xa + x || xa + x >= width || 0 >= ya + y
 							|| ya + y >= height) {
 						dataIndex++;
@@ -36,44 +37,70 @@ public class Frame {
 			}
 		}
 	}
-	
-	public void renderToFrame(Sprite sprite, int x, int y, float scale){
+
+	public void renderToFrame(Sprite sprite, int x, int y, float scale) {
 		int[] baseData = sprite.getPixels();
-		int nW = (int)(sprite.getWidth()*scale);
-		int nH = (int)(sprite.getHeight()*scale);
+		int nW = (int) (sprite.getWidth() * scale);
+		int nH = (int) (sprite.getHeight() * scale);
 		int oW = sprite.getWidth();
 		int oH = sprite.getHeight();
-		
-		int[] newData = new int[nW* nH];
-		
-		for (int ya = 0; ya < nH; ya++){
-			for (int xa = 0; xa < nW; xa++){
-				newData[xa + ya * nW] = baseData[(xa*oW/nW) + (ya*oH/nH)*oW];
+
+		int[] newData = new int[nW * nH];
+
+		for (int ya = 0; ya < nH; ya++) {
+			for (int xa = 0; xa < nW; xa++) {
+				newData[xa + ya * nW] = baseData[(xa * oW / nW)
+						+ (ya * oH / nH) * oW];
 			}
 		}
 		renderToFrame(newData, x, y, nW, nH);
 	}
-	
-	public void renderString(String string, Font font, int x, int y, int colour){
+
+	public void renderString(String string, Font font, int x, int y, int colour) {
 		Sprite[] sprites = font.getStringSprites(string);
-		
-		for (int i = 0; i < sprites.length; i++){
+
+		for (int i = 0; i < sprites.length; i++) {
 			sprites[i].setTint(colour);
-			renderToFrame(sprites[i].getPixels(), x + i * sprites[i].getWidth(), y,sprites[i].getWidth(), sprites[i].getHeight());
+			renderToFrame(sprites[i].getPixels(),
+					x + i * sprites[i].getWidth(), y, sprites[i].getWidth(),
+					sprites[i].getHeight());
 		}
 	}
-	
-	public void clear(int colour){
-		for (int i = 0; i < pixels.length; i++){
+
+	public void renderRectangle(int x, int y, int width, int height, int colour) {
+		int[] data = new int[width * height];
+		for (int i = 0; i < data.length; i++) {
+			data[i] = colour;
+		}
+		renderToFrame(data, x, y, width, height);
+	}
+
+	public void renderBorderedRectangle(int x, int y, int w, int h,
+			int borderColour, int fillColour) {
+		int[] data = new int[w * h];
+		for (int yy = 0; yy < h; yy++) {
+			for (int xx = 0; xx < w; xx++) {
+				if (yy == 0 || yy == h - 1 || xx == 0 || xx == w-1){
+					data[yy*w + xx] = borderColour;
+				} else {
+					data[yy*w + xx] = fillColour;
+				}
+			}
+		}
+		renderToFrame(data, x, y, w, h);
+	}
+
+	public void clear(int colour) {
+		for (int i = 0; i < pixels.length; i++) {
 			pixels[i] = colour;
 		}
 	}
-	
-	public int getWidth(){
+
+	public int getWidth() {
 		return width;
 	}
-	
-	public int getHeight(){
+
+	public int getHeight() {
 		return height;
 	}
 }

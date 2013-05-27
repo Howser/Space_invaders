@@ -1,8 +1,10 @@
 package howser.space_invaders;
 
+import howser.space_invaders.gfx.Colour;
 import howser.space_invaders.gfx.Frame;
 import howser.space_invaders.state.ExitState;
 import howser.space_invaders.state.GameState;
+import howser.space_invaders.state.HighScoreState;
 import howser.space_invaders.state.MainMenuState;
 import howser.space_invaders.state.StateManager;
 
@@ -108,13 +110,13 @@ public class Game extends Canvas implements Runnable {
 	public void init() {
 		input = new InputHandler();
 		this.addKeyListener(input);
-		stateManager = new StateManager();
-		stateManager.addState(new MainMenuState("main_menu", stateManager,
+		stateManager = new StateManager(this);
+		stateManager.addState(new MainMenuState("main_menu_state", stateManager,
 				input));
 		stateManager.addState(new GameState("game_state", stateManager, input, WIDTH, HEIGHT));
 		stateManager.addState(new ExitState("exit_state", stateManager, this));
-		stateManager.changeState("main_menu");
-
+		stateManager.addState(new HighScoreState("highscore_state", stateManager, input));
+		stateManager.changeState("main_menu_state");
 	}
 
 	public void tick() {
@@ -128,6 +130,7 @@ public class Game extends Canvas implements Runnable {
 				this.createBufferStrategy(3);
 				return;
 			}
+			frame.clear(Colour.BLACK);
 			stateManager.render(frame);
 			frame.getPixels(pixels);
 

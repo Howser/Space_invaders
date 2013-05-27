@@ -1,11 +1,12 @@
 package howser.space_invaders.state;
 
-import java.awt.event.KeyEvent;
-
 import howser.space_invaders.InputHandler;
 import howser.space_invaders.gfx.Colour;
 import howser.space_invaders.gfx.Font;
 import howser.space_invaders.gfx.Frame;
+import howser.space_invaders.state.messages.StateMessage;
+
+import java.awt.event.KeyEvent;
 
 public class MainMenuState extends BaseState {
 
@@ -39,6 +40,7 @@ public class MainMenuState extends BaseState {
 				this.stateManager.changeState("game_state");
 				break;
 			case 1:
+				stateManager.changeState("highscore_state");
 				break;
 			case 2: 
 				this.stateManager.changeState("exit_state");
@@ -74,6 +76,10 @@ public class MainMenuState extends BaseState {
 	}
 
 	public void reset() {
+		
+	}
+
+	public void receiveMessage(StateMessage message) {
 		
 	}
 }

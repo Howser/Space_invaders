@@ -1,6 +1,7 @@
 package howser.space_invaders.state;
 
 import howser.space_invaders.gfx.Frame;
+import howser.space_invaders.state.messages.StateMessage;
 
 public abstract class BaseState {
 	
@@ -21,4 +22,9 @@ public abstract class BaseState {
 	public void changeState(String state){
 		onExit();
 	}
+	
+	public void sendMessage(StateMessage message){
+		stateManager.sendMessage(message);
+	}
+	public abstract void receiveMessage(StateMessage message);
 }

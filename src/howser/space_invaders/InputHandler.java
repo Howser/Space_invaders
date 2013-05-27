@@ -29,7 +29,12 @@ public class InputHandler implements KeyListener {
 	}
 	
 	public void removeKeyListen(int keyCode){
-		listenKeys.remove(listenKeys.indexOf(keyCode));
+		for (Key k : listenKeys){
+			if (k.keyCode == keyCode){
+				listenKeys.remove(k);
+				return;
+			}
+		}
 	}
 	
 	public void clearKeyListens(){
@@ -56,6 +61,7 @@ public class InputHandler implements KeyListener {
 	}
 
 	public void keyTyped(KeyEvent e) {
+		
 	}
 
 	public boolean isKeyPressed(int keyCode) {

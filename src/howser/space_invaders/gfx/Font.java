@@ -22,6 +22,11 @@ public class Font {
 		this.tileWidth = width / 26;
 		this.tileHeight = height / 3;
 	}
+	
+	public boolean charExists(char c){
+		String s = ""+c;
+		return chars.contains(s);
+	}
 
 	public Sprite[] getStringSprites(String s) {
 		Sprite[] sprites = new Sprite[s.length()];
@@ -43,5 +48,12 @@ public class Font {
 			}
 		}
 		return sprites;
+	}
+	
+	public int getCharHeight(){
+		return tileHeight;
+	}
+	public int getCharWidth(){
+		return tileWidth;
 	}
 }

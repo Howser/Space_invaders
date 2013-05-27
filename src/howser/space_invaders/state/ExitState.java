@@ -3,6 +3,7 @@ package howser.space_invaders.state;
 import howser.space_invaders.Game;
 import howser.space_invaders.gfx.Colour;
 import howser.space_invaders.gfx.Frame;
+import howser.space_invaders.state.messages.StateMessage;
 
 public class ExitState extends BaseState{
 
@@ -29,6 +30,13 @@ public class ExitState extends BaseState{
 	}
 
 	public void reset() {
+		
+	}
+
+
+	@Override
+	public void receiveMessage(StateMessage message) {
+		// TODO Auto-generated method stub
 		
 	}
 
