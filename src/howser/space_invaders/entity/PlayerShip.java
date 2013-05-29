@@ -29,7 +29,6 @@ public class PlayerShip extends Ship {
 		input.addKeyListen(KeyEvent.VK_LEFT);
 		input.addKeyListen(KeyEvent.VK_RIGHT);
 		input.addKeyListen(KeyEvent.VK_SPACE);
-		sprite.setTint(Colour.RED);
 		this.weapon = weapon;
 	}
 

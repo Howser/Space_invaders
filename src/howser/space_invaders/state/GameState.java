@@ -42,6 +42,12 @@ public class GameState extends BaseState {
 	private SpriteAnimation explosion;
 	private boolean gameOver = false;
 
+	private enum PlayerType {
+		normal, rabbit, ironman
+	}
+
+	private PlayerType pt;
+
 	public GameState(String name, StateManager stateManager,
 			InputHandler input, int width, int height) {
 		super(name, stateManager);
@@ -51,6 +57,7 @@ public class GameState extends BaseState {
 		rand = new Random();
 		this.width = width;
 		this.height = height;
+		pt = PlayerType.normal;
 	}
 
 	public void tick() {
@@ -191,21 +198,38 @@ public class GameState extends BaseState {
 		scenery = new ArrayList<SceneryEntity>();
 		playerShots = new ArrayList<ShotEntity>();
 		planets = new ArrayList<Planet>();
-		player = new PlayerShip(
-				Sprite.getSpriteFromSheet(sprites, 0, 0, 16, 16), width / 2,
-				height - 30, 2, input, new SpriteAnimation(explosion), new Weapon(5, 2, 40, 10, 4,
-						Sprite.getSpriteFromSheet(sprites, 0, 16, 3, 3), 1));
-		player.setLists(playerShots);
+		if (pt == PlayerType.normal) {
+			player = new PlayerShip(Sprite.getSpriteFromSheet(sprites, 0, 0,
+					16, 16), width / 2, height - 30, 2, input,
+					new SpriteAnimation(explosion), new Weapon(1, 2, 0, 10, 4,
+							Sprite.getSpriteFromSheet(sprites, 0, 16, 3, 3), 1));
+			player.setLists(playerShots);
+
+		} else if (pt == PlayerType.rabbit) {
+			player = new PlayerShip(Sprite.getSpriteFromSheet(sprites, 32, 0,
+					16, 16), width / 2, height - 30, 2, input,
+					new SpriteAnimation(explosion), new Weapon(4, 2, 30, 6, 5,
+							Sprite.getSpriteFromSheet(sprites, 0, 16, 3, 3), 1));
+			player.setLists(playerShots);
+		} else if (pt == PlayerType.ironman) {
+			player = new PlayerShip(Sprite.getSpriteFromSheet(sprites, 64, 0,
+					16, 16), width / 2, height - 30, 2, input,
+					new SpriteAnimation(explosion), new Weapon(7, 4, 50, 10,
+							20,
+							Sprite.getSpriteFromSheet(sprites, 3, 16, 2, 2), 1));
+			player.setLists(playerShots);
+		}
 		input.addKeyListen(KeyEvent.VK_ESCAPE);
 	}
 
 	public void onExit() {
 		input.clearKeyListens();
 		enemyShips.clear();
-		
+		pt = PlayerType.normal;
+
 		ArrayList<Object> data = new ArrayList<Object>();
 		data.add(score);
-		
+
 		StateMessage msg = new StateMessage(this.name, "highscore_state", data);
 		sendMessage(msg);
 	}
@@ -232,18 +256,28 @@ public class GameState extends BaseState {
 	}
 
 	public void generateDangers() {
-		if (rand.nextInt(100) < 1) {
-			EnemyShip ship = new EnemyShip(Sprite.getSpriteFromSheet(sprites,
-					16, 0, 16, 16), rand.nextInt(width), -16, 0, 2,
-					Colour.PURPLE, false, 50, width, height, new SpriteAnimation(explosion));
-			enemyShips.add(ship);
-		}
-		if (rand.nextInt(200) < 1) {
-			float speedScale = (rand.nextFloat() + 0.5f) * 2;
-			planets.add(new Planet(Sprite.getSpriteFromSheet(sprites,
-					rand.nextInt(MAX_PLANETS) * 16, PLANET_ROW * 16, 16, 16),
-					rand.nextInt((int) (width - (16 * speedScale))), -40,
-					new SpriteAnimation(explosion), speedScale, speedScale / 2, false));
+		if (!player.isHit) {
+			if (rand.nextInt(100) < 1) {
+				if (rand.nextInt(100) > 30) {
+					EnemyShip ship = new EnemyShip(Sprite.getSpriteFromSheet(
+							sprites, 16, 0, 16, 16), rand.nextInt(width), -16,
+							0, 2, Colour.PURPLE, 50, width, height,
+							new SpriteAnimation(explosion));
+					enemyShips.add(ship);
+				} else {
+					
+				}
+			}
+			if (rand.nextInt(200) < 1) {
+				float speedScale = (rand.nextFloat() + 0.5f) * 2;
+				planets.add(new Planet(
+						Sprite.getSpriteFromSheet(sprites,
+								rand.nextInt(MAX_PLANETS) * 16,
+								PLANET_ROW * 16, 16, 16), rand
+								.nextInt((int) (width - (16 * speedScale))),
+						-40, new SpriteAnimation(explosion), speedScale,
+						speedScale / 2, false));
+			}
 		}
 	}
 
@@ -287,9 +321,10 @@ public class GameState extends BaseState {
 						planets.add(new Planet(Sprite.getSpriteFromSheet(
 								sprites, rand.nextInt(MAX_PLANET_SHARDS) * 16,
 								PLANET_SHARD_ROW * 16, 16, 16),
-								planets.get(i).x, planets.get(i).y, new SpriteAnimation(explosion),
-								planets.get(i).getScale() / 2,
-								rand.nextFloat() * 2f, true));
+								planets.get(i).x, planets.get(i).y,
+								new SpriteAnimation(explosion), planets.get(i)
+										.getScale() / 2, rand.nextFloat() * 2f,
+								true));
 					}
 				}
 			}
@@ -318,6 +353,12 @@ public class GameState extends BaseState {
 	}
 
 	public void receiveMessage(StateMessage message) {
-		
+		if (message.sender.equals("highscore_state")) {
+			if (message.message.get(0).equals("rabbit")) {
+				pt = PlayerType.rabbit;
+			} else if (message.message.get(0).equals("ironman")) {
+				pt = PlayerType.ironman;
+			}
+		}
 	}
 }

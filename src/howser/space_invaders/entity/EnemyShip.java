@@ -9,20 +9,18 @@ import java.util.Random;
 public class EnemyShip extends Ship {
 
 	private Random rand;
-	private boolean shootingEnabled;
 	public int score;
 	public float xSpeed, ySpeed;
 	private int screenWidth, screenHeight;
 	public boolean dead = false;
 
 	public EnemyShip(Sprite sprite, float x, float y, float xSpeed,
-			float ySpeed, int colour, boolean shootingEnabled, int score,
+			float ySpeed, int colour, int score,
 			int screenWidth, int screenHeight, SpriteAnimation explosion) {
 		super(sprite, x, y, explosion);
 		setSpeed(xSpeed, ySpeed);
 		sprite.setTint(colour);
 		sprite.mirrorY = true;
-		this.shootingEnabled = shootingEnabled;
 		this.score = score;
 		rand = new Random();
 		this.screenWidth = screenWidth;

@@ -9,6 +9,7 @@ import howser.space_invaders.highscore.Score;
 import howser.space_invaders.state.messages.StateMessage;
 
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 public class HighScoreState extends BaseState {
 
@@ -36,7 +37,7 @@ public class HighScoreState extends BaseState {
 			nameBox.setVisible(false);
 			highscoreManager.addHighscore(s);
 		}
-		if (input.keyPressedThisFrame(KeyEvent.VK_ESCAPE)){
+		if (input.keyPressedThisFrame(KeyEvent.VK_ESCAPE)) {
 			stateManager.changeState("main_menu_state");
 		}
 	}
@@ -76,6 +77,18 @@ public class HighScoreState extends BaseState {
 				nameBox.setVisible(true);
 			} else {
 				addScore = false;
+			}
+			
+			if ((int) message.message.get(0) >= 25000) {
+				ArrayList<Object> l = new ArrayList<Object>();
+				l.add("ironman");
+				StateMessage msg = new StateMessage(this.name, "game_state", l);
+				sendMessage(msg);
+			} else if ((int) message.message.get(0) >= 1337) {
+				ArrayList<Object> l = new ArrayList<Object>();
+				l.add("rabbit");
+				StateMessage msg = new StateMessage(this.name, "game_state", l);
+				sendMessage(msg);
 			}
 		}
 		if (message.sender == "main_menu") {
