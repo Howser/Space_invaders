@@ -2,6 +2,7 @@ package howser.space_invaders.state;
 
 import howser.space_invaders.InputHandler;
 import howser.space_invaders.TextBoxInput;
+import howser.space_invaders.gfx.Colour;
 import howser.space_invaders.gfx.Font;
 import howser.space_invaders.gfx.Frame;
 import howser.space_invaders.highscore.HighscoreManager;
@@ -45,6 +46,7 @@ public class HighScoreState extends BaseState {
 	public void render(Frame frame) {
 		nameBox.render(frame);
 		highscoreManager.render(frame);
+		frame.renderString("Press esc to return to menu", font, 20, frame.getHeight()-20, Colour.WHITE);
 	}
 
 	public void onEnter() {

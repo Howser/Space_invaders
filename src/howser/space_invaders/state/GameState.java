@@ -5,6 +5,7 @@ import howser.space_invaders.entity.EnemyShip;
 import howser.space_invaders.entity.Planet;
 import howser.space_invaders.entity.PlayerShip;
 import howser.space_invaders.entity.SceneryEntity;
+import howser.space_invaders.entity.ShootingEnemyShip;
 import howser.space_invaders.entity.ShotEntity;
 import howser.space_invaders.entity.Weapon;
 import howser.space_invaders.gfx.Colour;
@@ -23,6 +24,7 @@ public class GameState extends BaseState {
 
 	private ArrayList<SceneryEntity> scenery;
 	private ArrayList<ShotEntity> playerShots;
+	private ArrayList<ShotEntity> enemyShots;
 	private ArrayList<EnemyShip> enemyShips;
 	private ArrayList<Planet> planets;
 	private PlayerShip player;
@@ -70,6 +72,24 @@ public class GameState extends BaseState {
 				}
 				if (playerShots.get(i).isToBeRemoved()) {
 					playerShots.remove(i);
+					i--;
+				}
+			}
+			
+			//player hit by enemy shot
+			for (int i = 0; i < enemyShots.size(); i++) {
+				enemyShots.get(i).tick();
+				if (player.collides(enemyShots.get(i).x, enemyShots.get(i).y,
+						enemyShots.get(i).width, enemyShots.get(i).height)) {
+					player.hit();
+					enemyShots.get(i).setForRemoval();
+					explodeAll();
+				}
+				if (enemyShots.get(i).y < 0) {
+					enemyShots.get(i).setForRemoval();
+				}
+				if (enemyShots.get(i).isToBeRemoved()) {
+					enemyShots.remove(i);
 					i--;
 				}
 			}
@@ -161,6 +181,10 @@ public class GameState extends BaseState {
 			s.render(frame);
 		}
 
+		for (ShotEntity s : enemyShots) {
+			s.render(frame);
+		}
+
 		for (Planet p : planets) {
 			p.render(frame);
 		}
@@ -197,6 +221,7 @@ public class GameState extends BaseState {
 		enemyShips = new ArrayList<EnemyShip>();
 		scenery = new ArrayList<SceneryEntity>();
 		playerShots = new ArrayList<ShotEntity>();
+		enemyShots = new ArrayList<ShotEntity>();
 		planets = new ArrayList<Planet>();
 		if (pt == PlayerType.normal) {
 			player = new PlayerShip(Sprite.getSpriteFromSheet(sprites, 0, 0,
@@ -225,6 +250,7 @@ public class GameState extends BaseState {
 	public void onExit() {
 		input.clearKeyListens();
 		enemyShips.clear();
+		enemyShots.clear();
 		pt = PlayerType.normal;
 
 		ArrayList<Object> data = new ArrayList<Object>();
@@ -265,10 +291,17 @@ public class GameState extends BaseState {
 							new SpriteAnimation(explosion));
 					enemyShips.add(ship);
 				} else {
-					
+					ShootingEnemyShip ship = new ShootingEnemyShip(
+							Sprite.getSpriteFromSheet(sprites, 48, 0, 16, 16),
+							rand.nextInt(width), -16, 0, 1.2f, Colour.RED, 50,
+							width, height, new SpriteAnimation(explosion),
+							new Weapon(1, 3, 0, 40, 4,
+									Sprite.getSpriteFromSheet(sprites, 5, 16,
+											3, 3), 0), enemyShots);
+					enemyShips.add(ship);
 				}
 			}
-			if (rand.nextInt(200) < 1) {
+			if (rand.nextInt(score/10) > 1000) {
 				float speedScale = (rand.nextFloat() + 0.5f) * 2;
 				planets.add(new Planet(
 						Sprite.getSpriteFromSheet(sprites,
