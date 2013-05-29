@@ -17,8 +17,16 @@ import howser.space_invaders.gfx.SpriteSheet;
 import howser.space_invaders.state.messages.StateMessage;
 
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class GameState extends BaseState {
 
@@ -49,6 +57,8 @@ public class GameState extends BaseState {
 	}
 
 	private PlayerType pt;
+	private Clip explosionSound;
+	private Clip hitSound;
 
 	public GameState(String name, StateManager stateManager,
 			InputHandler input, int width, int height) {
@@ -60,6 +70,40 @@ public class GameState extends BaseState {
 		this.width = width;
 		this.height = height;
 		pt = PlayerType.normal;
+		
+		URL soundFile = this.getClass().getResource("/explosion.wav");
+		AudioInputStream audioIn = null;
+		try {
+			audioIn = AudioSystem.getAudioInputStream(soundFile);
+		} catch (UnsupportedAudioFileException | IOException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			explosionSound = AudioSystem.getClip();
+			explosionSound.open(audioIn);
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		soundFile = this.getClass().getResource("/hit.wav");
+		audioIn = null;
+		try {
+			audioIn = AudioSystem.getAudioInputStream(soundFile);
+		} catch (UnsupportedAudioFileException | IOException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			hitSound = AudioSystem.getClip();
+			hitSound.open(audioIn);
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void tick() {
@@ -75,8 +119,8 @@ public class GameState extends BaseState {
 					i--;
 				}
 			}
-			
-			//player hit by enemy shot
+
+			// player hit by enemy shot
 			for (int i = 0; i < enemyShots.size(); i++) {
 				enemyShots.get(i).tick();
 				if (player.collides(enemyShots.get(i).x, enemyShots.get(i).y,
@@ -84,6 +128,11 @@ public class GameState extends BaseState {
 					player.hit();
 					enemyShots.get(i).setForRemoval();
 					explodeAll();
+					if (hitSound.isRunning()){
+						hitSound.stop();
+					}
+					hitSound.setFramePosition(0);
+					hitSound.start();
 				}
 				if (enemyShots.get(i).y < 0) {
 					enemyShots.get(i).setForRemoval();
@@ -107,6 +156,11 @@ public class GameState extends BaseState {
 						score += enemyShips.get(i).score;
 						enemyShips.get(i).die();
 						playerShots.get(j).setForRemoval();
+						if (explosionSound.isRunning()){
+							explosionSound.stop();
+						}
+						explosionSound.setFramePosition(0);
+						explosionSound.start();
 						break;
 					}
 				}
@@ -234,7 +288,7 @@ public class GameState extends BaseState {
 			player = new PlayerShip(Sprite.getSpriteFromSheet(sprites, 32, 0,
 					16, 16), width / 2, height - 30, 2, input,
 					new SpriteAnimation(explosion), new Weapon(4, 2, 30, 6, 5,
-							Sprite.getSpriteFromSheet(sprites, 0, 16, 3, 3), 1));
+							Sprite.getSpriteFromSheet(sprites, 8, 16, 3, 4), 1));
 			player.setLists(playerShots);
 		} else if (pt == PlayerType.ironman) {
 			player = new PlayerShip(Sprite.getSpriteFromSheet(sprites, 64, 0,
@@ -301,7 +355,7 @@ public class GameState extends BaseState {
 					enemyShips.add(ship);
 				}
 			}
-			if (rand.nextInt(score/10) > 1000) {
+			if (rand.nextInt(200) < 1) {
 				float speedScale = (rand.nextFloat() + 0.5f) * 2;
 				planets.add(new Planet(
 						Sprite.getSpriteFromSheet(sprites,
@@ -343,6 +397,11 @@ public class GameState extends BaseState {
 						&& !planets.get(i).exploding) {
 					planets.get(i).hit(s.damage);
 					s.setForRemoval();
+					if (hitSound.isRunning()){
+						hitSound.stop();
+					}
+					hitSound.setFramePosition(0);
+					hitSound.start();
 				}
 			}
 
@@ -360,6 +419,11 @@ public class GameState extends BaseState {
 								true));
 					}
 				}
+				if (explosionSound.isRunning()){
+					explosionSound.stop();
+				}
+				explosionSound.setFramePosition(0);
+				explosionSound.start();
 			}
 
 			planets.get(i).tick();
@@ -383,6 +447,11 @@ public class GameState extends BaseState {
 				planets.get(i).childrenCreated = true;
 			}
 		}
+		if (explosionSound.isRunning()){
+			explosionSound.stop();
+		}
+		explosionSound.setFramePosition(0);
+		explosionSound.start();
 	}
 
 	public void receiveMessage(StateMessage message) {

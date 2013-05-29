@@ -1,13 +1,20 @@
 package howser.space_invaders.entity;
 
 import howser.space_invaders.InputHandler;
-import howser.space_invaders.gfx.Colour;
 import howser.space_invaders.gfx.Frame;
 import howser.space_invaders.gfx.Sprite;
 import howser.space_invaders.gfx.SpriteAnimation;
 
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class PlayerShip extends Ship {
 
@@ -21,6 +28,8 @@ public class PlayerShip extends Ship {
 	private boolean dead = false;
 	private Weapon weapon;
 
+	private Clip shootSound;
+
 	public PlayerShip(Sprite sprite, float x, float y, float speed,
 			InputHandler input, SpriteAnimation explosion, Weapon weapon) {
 		super(sprite, x, y, explosion);
@@ -30,6 +39,22 @@ public class PlayerShip extends Ship {
 		input.addKeyListen(KeyEvent.VK_RIGHT);
 		input.addKeyListen(KeyEvent.VK_SPACE);
 		this.weapon = weapon;
+		URL soundFile = this.getClass().getResource("/fire.wav");
+		AudioInputStream audioIn = null;
+		try {
+			audioIn = AudioSystem.getAudioInputStream(soundFile);
+		} catch (UnsupportedAudioFileException | IOException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			shootSound = AudioSystem.getClip();
+			shootSound.open(audioIn);
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void setLists(ArrayList<ShotEntity> playerShots) {
@@ -78,6 +103,11 @@ public class PlayerShip extends Ship {
 			for (ShotEntity e : shots) {
 				playerShots.add(e);
 			}
+			if (shootSound.isRunning()){
+				shootSound.stop();
+			}
+			shootSound.setFramePosition(0);
+			shootSound.start();
 		}
 	}
 
