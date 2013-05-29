@@ -60,6 +60,7 @@ public class MainMenuState extends BaseState {
 				Colour.WHITE);
 		frame.renderString("x", menuFont, 90, h / 4 + ySpacing * selectedItem,
 				Colour.RED);
+		frame.renderString("By:HoWseR", menuFont, 20, frame.getHeight()-20, Colour.getColour(255, 125, 125));
 	}
 
 	public void onEnter() {
