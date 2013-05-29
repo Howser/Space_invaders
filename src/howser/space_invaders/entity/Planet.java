@@ -1,6 +1,5 @@
 package howser.space_invaders.entity;
 
-import howser.space_invaders.gfx.Colour;
 import howser.space_invaders.gfx.Frame;
 import howser.space_invaders.gfx.Sprite;
 import howser.space_invaders.gfx.SpriteAnimation;

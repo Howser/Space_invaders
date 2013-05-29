@@ -12,10 +12,13 @@ import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 public class Game extends Canvas implements Runnable {
@@ -47,6 +50,13 @@ public class Game extends Canvas implements Runnable {
 		this.setMinimumSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		this.setMaximumSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 
+		Image icon = null;
+		try {
+			icon = ImageIO.read(Game.class.getResource("/icon.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		jFrame = new JFrame();
 
 		jFrame.setTitle(NAME);
@@ -56,7 +66,7 @@ public class Game extends Canvas implements Runnable {
 		jFrame.add(this, BorderLayout.CENTER);
 		jFrame.pack();
 
-		// jFrame.setIconImage(ICON_IMAGE_SOMETHING);
+		jFrame.setIconImage(icon);
 		jFrame.setLocationRelativeTo(null);
 		jFrame.setResizable(false);
 		jFrame.setVisible(true);

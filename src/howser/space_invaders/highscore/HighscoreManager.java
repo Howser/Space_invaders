@@ -4,7 +4,6 @@ import howser.space_invaders.gfx.Colour;
 import howser.space_invaders.gfx.Font;
 import howser.space_invaders.gfx.Frame;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

@@ -4,11 +4,8 @@ import howser.space_invaders.gfx.Frame;
 import howser.space_invaders.gfx.Sprite;
 import howser.space_invaders.gfx.SpriteAnimation;
 
-import java.util.Random;
-
 public class EnemyShip extends Ship {
 
-	private Random rand;
 	public int score;
 	public float xSpeed, ySpeed;
 	private int screenWidth, screenHeight;
@@ -22,7 +19,6 @@ public class EnemyShip extends Ship {
 		sprite.setTint(colour);
 		sprite.mirrorY = true;
 		this.score = score;
-		rand = new Random();
 		this.screenWidth = screenWidth;
 		this.screenHeight = screenHeight;
 	}
