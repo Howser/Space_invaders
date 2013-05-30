@@ -337,8 +337,8 @@ public class GameState extends BaseState {
 
 	public void generateDangers() {
 		if (!player.isHit) {
-			if (rand.nextInt(100) < 1) {
-				if (rand.nextInt(100) > 30) {
+			if (rand.nextInt(10000) < (score/100)+30) {
+				if (rand.nextInt(10000) > (score/50)) {
 					EnemyShip ship = new EnemyShip(Sprite.getSpriteFromSheet(
 							sprites, 16, 0, 16, 16), rand.nextInt(width), -16,
 							0, 2, Colour.PURPLE, 50, width, height,
